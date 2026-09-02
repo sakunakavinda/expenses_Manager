@@ -18,12 +18,36 @@ function App() {
   });
   
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [timeFilter, setTimeFilter] = useState('month');
 
   useEffect(() => {
     localStorage.setItem('expenses', JSON.stringify(expenses));
   }, [expenses]);
 
-  const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+  const getFilteredExpenses = () => {
+    const now = new Date();
+    return expenses.filter(exp => {
+      const expDate = new Date(exp.date);
+      if (timeFilter === 'today') {
+        return expDate.toDateString() === now.toDateString();
+      }
+      if (timeFilter === 'week') {
+        const startOfWeek = new Date(now);
+        startOfWeek.setDate(now.getDate() - now.getDay()); // Sunday
+        return expDate >= startOfWeek;
+      }
+      if (timeFilter === 'month') {
+        return expDate.getMonth() === now.getMonth() && expDate.getFullYear() === now.getFullYear();
+      }
+      if (timeFilter === 'year') {
+        return expDate.getFullYear() === now.getFullYear();
+      }
+      return true;
+    });
+  };
+
+  const filteredExpenses = getFilteredExpenses();
+  const totalFilteredExpenses = filteredExpenses.reduce((sum, exp) => sum + exp.amount, 0);
 
   const handleAddExpense = (newExpense) => {
     setExpenses(prev => [newExpense, ...prev]);
@@ -35,7 +59,9 @@ function App() {
       
       <main className="main-content">
         <Dashboard 
-          totalExpenses={totalExpenses} 
+          totalExpenses={totalFilteredExpenses} 
+          timeFilter={timeFilter}
+          onTimeFilterChange={setTimeFilter}
           onAddExpense={() => setIsModalOpen(true)} 
         />
         
