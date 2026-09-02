@@ -1,7 +1,17 @@
 import React from 'react';
-import { Plus, TrendingUp } from 'lucide-react';
+import { Plus, TrendingUp, TrendingDown } from 'lucide-react';
 
-const Dashboard = ({ totalExpenses, timeFilter, onTimeFilterChange, onAddExpense }) => {
+const Dashboard = ({ totalExpenses, timeFilter, trend = 0, onTimeFilterChange, onAddExpense }) => {
+  const getTrendText = () => {
+    switch (timeFilter) {
+      case 'today': return 'from yesterday';
+      case 'week': return 'from last week';
+      case 'month': return 'from last month';
+      case 'year': return 'from last year';
+      default: return '';
+    }
+  };
+
   return (
     <section className="dashboard">
       <div className="dashboard-cards">
@@ -29,8 +39,14 @@ const Dashboard = ({ totalExpenses, timeFilter, onTimeFilterChange, onAddExpense
           </div>
           <h2 className="amount">LKR {totalExpenses.toFixed(2)}</h2>
           <div className="trend">
-            <TrendingUp size={16} color="var(--danger-color)" />
-            <span>+2.4% from last month</span>
+            {trend >= 0 ? (
+              <TrendingUp size={16} color="var(--danger-color)" />
+            ) : (
+              <TrendingDown size={16} color="var(--success-color)" />
+            )}
+            <span style={{ color: trend >= 0 ? 'var(--danger-color)' : 'var(--success-color)' }}>
+              {trend >= 0 ? '+' : ''}{trend.toFixed(1)}% {getTrendText()}
+            </span>
           </div>
         </div>
         

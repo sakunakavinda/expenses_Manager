@@ -288,6 +288,25 @@ button {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  max-height: 550px; /* Displays roughly 5-6 records at a time */
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+/* Custom Scrollbar for Expense List */
+.expense-list::-webkit-scrollbar {
+  width: 6px;
+}
+.expense-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+.expense-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+}
+.expense-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .expense-item {

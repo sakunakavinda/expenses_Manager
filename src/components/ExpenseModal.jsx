@@ -48,9 +48,10 @@ const ExpenseModal = ({ isOpen, onClose, onSave }) => {
     if (!formData.amount || !formData.description) return;
     
     onSave({
-      ...formData,
       amount: parseFloat(formData.amount),
-      id: Date.now().toString(),
+      category: formData.category,
+      description: formData.description,
+      bill_number: formData.billNo,
       date: new Date().toISOString()
     });
     onClose();

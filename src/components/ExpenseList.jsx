@@ -62,8 +62,8 @@ const ExpenseList = ({ expenses }) => {
               <h4>{expense.description}</h4>
               <div className="expense-meta">
                 <span className="category-tag">{expense.category}</span>
-                {expense.billNo && (
-                  <span className="bill-tag">Bill: {expense.billNo}</span>
+                {expense.bill_number && (
+                  <span className="bill-tag">Bill: {expense.bill_number}</span>
                 )}
               </div>
             </div>
