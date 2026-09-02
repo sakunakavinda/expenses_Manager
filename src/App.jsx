@@ -3,11 +3,13 @@ import Header from './components/Header';
 import Dashboard from './components/Dashboard';
 import ExpenseModal from './components/ExpenseModal';
 import ExpenseList from './components/ExpenseList';
+import FullReportPage from './components/FullReportPage';
 import { supabase } from './supabaseClient';
 
 function App() {
   const [expenses, setExpenses] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState('dashboard');
   const [timeFilter, setTimeFilter] = useState('month');
 
   useEffect(() => {
@@ -143,17 +145,29 @@ function App() {
     <div className="app-container">
       <Header />
       
-      <main className="main-content">
-        <Dashboard 
-          totalExpenses={totalFilteredExpenses} 
-          timeFilter={timeFilter}
-          trend={trend}
-          onTimeFilterChange={setTimeFilter}
-          onAddExpense={() => setIsModalOpen(true)} 
-        />
-        
-        <ExpenseList expenses={filteredExpenses} />
-      </main>
+      {currentPage === 'dashboard' ? (
+        <main className="main-content">
+          <Dashboard 
+            totalExpenses={totalFilteredExpenses} 
+            timeFilter={timeFilter}
+            trend={trend}
+            onTimeFilterChange={setTimeFilter}
+            onAddExpense={() => setIsModalOpen(true)} 
+          />
+          
+          <ExpenseList 
+            expenses={filteredExpenses} 
+            onViewReport={() => setCurrentPage('report')}
+          />
+        </main>
+      ) : (
+        <main className="main-content">
+          <FullReportPage 
+            expenses={expenses}
+            onBack={() => setCurrentPage('dashboard')}
+          />
+        </main>
+      )}
 
       <ExpenseModal 
         isOpen={isModalOpen} 
