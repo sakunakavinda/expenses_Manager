@@ -27,7 +27,7 @@ const getCategoryColor = (category) => {
   }
 };
 
-const ExpenseList = ({ expenses, onViewReport }) => {
+const ExpenseList = ({ expenses }) => {
   if (expenses.length === 0) {
     return (
       <div className="empty-state glass-panel">
@@ -47,9 +47,6 @@ const ExpenseList = ({ expenses, onViewReport }) => {
           <h2>Recent Expenses</h2>
           <span className="count-badge">{expenses.length}</span>
         </div>
-        <button className="btn-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem' }} onClick={onViewReport}>
-          View Full Report
-        </button>
       </div>
       
       <div className="expense-list">

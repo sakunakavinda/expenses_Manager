@@ -1,7 +1,7 @@
 import React from 'react';
 import { Plus, TrendingUp, TrendingDown } from 'lucide-react';
 
-const Dashboard = ({ totalExpenses, timeFilter, trend = 0, onTimeFilterChange, onAddExpense }) => {
+const Dashboard = ({ totalExpenses, timeFilter, trend = 0, onTimeFilterChange, onAddExpense, onViewReport }) => {
   const getTrendText = () => {
     switch (timeFilter) {
       case 'today': return 'from yesterday';
@@ -38,15 +38,22 @@ const Dashboard = ({ totalExpenses, timeFilter, trend = 0, onTimeFilterChange, o
             </div>
           </div>
           <h2 className="amount">LKR {totalExpenses.toFixed(2)}</h2>
-          <div className="trend">
-            {trend >= 0 ? (
-              <TrendingUp size={16} color="var(--danger-color)" />
-            ) : (
-              <TrendingDown size={16} color="var(--success-color)" />
+          <div className="trend" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              {trend >= 0 ? (
+                <TrendingUp size={16} color="var(--danger-color)" />
+              ) : (
+                <TrendingDown size={16} color="var(--success-color)" />
+              )}
+              <span style={{ color: trend >= 0 ? 'var(--danger-color)' : 'var(--success-color)' }}>
+                {trend >= 0 ? '+' : ''}{trend.toFixed(1)}% {getTrendText()}
+              </span>
+            </div>
+            {onViewReport && (
+              <button className="btn-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem' }} onClick={onViewReport}>
+                View Full Report
+              </button>
             )}
-            <span style={{ color: trend >= 0 ? 'var(--danger-color)' : 'var(--success-color)' }}>
-              {trend >= 0 ? '+' : ''}{trend.toFixed(1)}% {getTrendText()}
-            </span>
           </div>
         </div>
         

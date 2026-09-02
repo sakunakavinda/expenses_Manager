@@ -31,12 +31,30 @@ const getCategoryColor = (category) => {
 
 const FullReportPage = ({ expenses, onBack }) => {
   const [timeFilter, setTimeFilter] = useState('month');
+  const [selectedMonth, setSelectedMonth] = useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  });
 
-  // Filter expenses based on timeFilter
+  // Generate last 12 months for the horizontal selector
+  const recentMonths = React.useMemo(() => {
+    const months = [];
+    const d = new Date();
+    for(let i=0; i<12; i++) {
+      const monthStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      const labelStr = d.toLocaleString('default', { month: 'short', year: '2-digit' });
+      months.push({ value: monthStr, label: labelStr });
+      d.setMonth(d.getMonth() - 1);
+    }
+    return months.reverse(); // Oldest on left, newest on right
+  }, []);
+
+  // Filter expenses based on selected filters
   const getFilteredExpenses = () => {
     const now = new Date();
     return expenses.filter(exp => {
       const expDate = new Date(exp.date);
+      
       if (timeFilter === 'week') {
         const startOfWeek = new Date(now);
         startOfWeek.setDate(now.getDate() - now.getDay());
@@ -44,12 +62,13 @@ const FullReportPage = ({ expenses, onBack }) => {
         return expDate >= startOfWeek;
       }
       if (timeFilter === 'month') {
-        return expDate.getMonth() === now.getMonth() && expDate.getFullYear() === now.getFullYear();
+        const expMonth = `${expDate.getFullYear()}-${String(expDate.getMonth() + 1).padStart(2, '0')}`;
+        return expMonth === selectedMonth;
       }
       if (timeFilter === 'year') {
         return expDate.getFullYear() === now.getFullYear();
       }
-      return true; // 'all' fallback if needed
+      return true; // fallback
     });
   };
 
@@ -76,7 +95,7 @@ const FullReportPage = ({ expenses, onBack }) => {
       <div className="card glass-panel" style={{ marginBottom: '2rem', padding: '1.5rem' }}>
         <div className="balance-header">
           <h3>Total Expenses</h3>
-          <div className="filter-toggle">
+          <div className="filter-toggle" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
             <button 
               className={`toggle-btn ${timeFilter === 'week' ? 'active' : ''}`}
               onClick={() => setTimeFilter('week')}
@@ -84,11 +103,49 @@ const FullReportPage = ({ expenses, onBack }) => {
             <button 
               className={`toggle-btn ${timeFilter === 'month' ? 'active' : ''}`}
               onClick={() => setTimeFilter('month')}
-            >This Month</button>
+            >Month</button>
             <button 
               className={`toggle-btn ${timeFilter === 'year' ? 'active' : ''}`}
               onClick={() => setTimeFilter('year')}
             >This Year</button>
+            
+            
+            {timeFilter === 'month' && (() => {
+              const currentMonthInt = parseInt(selectedMonth.split('-')[1], 10);
+              return (
+                <div className="diamond-slider-container" style={{ width: '100%', marginTop: '2.5rem', padding: '0 1rem', position: 'relative' }}>
+                  
+                  {/* Tooltip */}
+                  <div className="slider-tooltip" style={{ left: `calc(1rem + ${((currentMonthInt - 1) / 11) * (100)}% - ${((currentMonthInt - 1) / 11) * 2}rem)` }}>
+                    {new Date(parseInt(selectedMonth.split('-')[0]), currentMonthInt - 1).toLocaleString('default', { month: 'short', year: '2-digit' })}
+                  </div>
+                  
+                  {/* Custom track and thumb */}
+                  <div className="diamond-track">
+                    <div className="diamond-fill" style={{ width: `${((currentMonthInt - 1) / 11) * 100}%` }}></div>
+                    
+                    <div 
+                      className="diamond-node filled"
+                      style={{ left: `calc(${((currentMonthInt - 1) / 11) * 100}%)` }}
+                    ></div>
+                  </div>
+
+                  {/* Invisible native range input for dragging support */}
+                  <input 
+                    type="range" 
+                    min="1" 
+                    max="12" 
+                    value={currentMonthInt}
+                    onChange={(e) => {
+                      const year = selectedMonth.split('-')[0];
+                      const newMonth = String(e.target.value).padStart(2, '0');
+                      setSelectedMonth(`${year}-${newMonth}`);
+                    }}
+                    className="invisible-slider"
+                  />
+                </div>
+              );
+            })()}
           </div>
         </div>
         <h2 className="amount" style={{ fontSize: '2.5rem', marginBottom: '2rem' }}>

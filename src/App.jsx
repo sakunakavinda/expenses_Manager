@@ -153,11 +153,11 @@ function App() {
             trend={trend}
             onTimeFilterChange={setTimeFilter}
             onAddExpense={() => setIsModalOpen(true)} 
+            onViewReport={() => setCurrentPage('report')}
           />
           
           <ExpenseList 
             expenses={filteredExpenses} 
-            onViewReport={() => setCurrentPage('report')}
           />
         </main>
       ) : (

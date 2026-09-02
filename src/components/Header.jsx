@@ -5,7 +5,7 @@ const Header = () => {
   return (
     <header className="app-header">
       <div className="banner-container" style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-        <img src="/banner.png" alt="One More - The Heart Beat of Music" style={{ maxWidth: '100%', height: 'auto', maxHeight: '120px' }} />
+        <img src="/banner.png" alt="One More - The Heart Beat of Music" className="responsive-banner" style={{ maxWidth: '100%', height: 'auto', maxHeight: '120px' }} />
       </div>
       <div className="header-content">
         <div className="logo-container">

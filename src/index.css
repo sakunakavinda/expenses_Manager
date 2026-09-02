@@ -382,6 +382,83 @@ button {
   font-weight: 700;
 }
 
+/* Diamond Slider Styles */
+.diamond-slider-container {
+  position: relative;
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.slider-tooltip {
+  position: absolute;
+  top: -30px;
+  transform: translateX(-50%);
+  background: rgba(30, 41, 59, 0.9);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: left 0.1s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 5;
+}
+
+.diamond-track {
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  right: 1rem;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.diamond-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: #ffffff;
+  transition: width 0.1s ease;
+}
+
+.diamond-node {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  background: #1e293b; /* Match container background for hollow effect */
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%) rotate(45deg);
+  transition: all 0.2s ease;
+  z-index: 2;
+}
+
+.diamond-node.filled {
+  background: #ffffff;
+  border-color: #ffffff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.invisible-slider {
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  right: 1rem;
+  width: calc(100% - 2rem);
+  transform: translateY(-50%);
+  opacity: 0;
+  cursor: pointer;
+  z-index: 3;
+  margin: 0;
+  height: 30px; /* larger tap target */
+}
+
 .expense-item {
   display: flex;
   align-items: center;
@@ -606,6 +683,9 @@ select {
 
 /* Responsive */
 @media (max-width: 600px) {
+  .responsive-banner {
+    max-width: 50% !important;
+  }
   .dashboard-cards {
     grid-template-columns: 1fr;
   }
